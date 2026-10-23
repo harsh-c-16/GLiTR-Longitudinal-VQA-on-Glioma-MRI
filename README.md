@@ -40,29 +40,18 @@ pip install -r requirements.txt
 Frozen weights: download `BrainIAC.ckpt` from its authors ([BrainIAC](https://github.com/AIM-KannLab/BrainIAC)); it is licensed for
 non-commercial academic research only and is not included here. BioBERT (`dmis-lab/biobert-v1.1`) is downloaded from Hugging Face on first use.
 
-## Hardware Requirements
-
-- **GPU**: one NVIDIA GPU with CUDA 12 (the pinned `torch==2.5.1` wheel ships CUDA 12.4). We used RTX A6000 (48 GB) and
-  RTX A5000 (24 GB) for MU-Glioma-Post and L40S (48 GB) for LUMIERE. Training reads the precomputed features, and one job needs
-  about 1 GB of GPU memory, so several seeds can share a card (`JOBS` in `scripts/run_seeds.sh`).
-- **Disk**: the frozen features take under 10 MB per cohort; the raw MRI datasets are downloaded separately.
-- **Software**: Linux, Python 3.10.
-
 ## Dataset Preparation
 
-Download both datasets yourself:
+Download the two public datasets (both CC BY 4.0):
 
-- **LUMIERE** (Suter et al., 2022): images in `Lumiere_dataset/Imaging/<Patient-xxx>/<week-...>/HD-GLIO-AUTO-segmentation/registered/{CT1,T1,T2,FLAIR}_r2s_bet_reg.nii.gz`,
-  plus `LUMIERE_data.csv` for step 1 of Usage: the per-visit DeepBraTumIA voxel counts (columns Patient, Timepoint, Label,
-  NumberOfVoxels). It is not part of the LUMIERE download; build it from the per-visit `measured_volumes_in_mm3.json` files, which
-  match it at almost every visit, so a rebuilt table can change a few labels (the shipped `configs/gt_lumiere.csv` is the
-  reference). It names labels 1 and 2 the wrong way round (1 is the enhancing core, 2 the necrotic core); `glitr/labels.py`
-  follows the image content.
-- **MU-Glioma-Post** (TCIA, 2025): `MU-Glioma-Post/PatientID_xxxx/Timepoint_n/*_brain_{t1c,t1n,t2w,t2f}.nii.gz`.
+| Dataset | Source | Files used |
+|---|---|---|
+| LUMIERE | [figshare](https://doi.org/10.6084/m9.figshare.c.5904905.v1) | `Imaging/Patient-xxx/week-xxx/HD-GLIO-AUTO-segmentation/registered/{CT1,T1,T2,FLAIR}_r2s_bet_reg.nii.gz` |
+| MU-Glioma-Post | [TCIA](https://doi.org/10.7937/7K9K-3C83) | `PatientID_xxxx/Timepoint_n/*_brain_{t1c,t1n,t2w,t2f}.nii.gz` |
 
-A scan is used only if its segmentation file exists, because its label comes from it; the segmentation itself is never read by the model.
-The labels, patient folds and MU scan days we used are in `configs/`; they are derived from the two datasets and shared under
-the same CC BY 4.0 license.
+The labels, patient folds and MU scan days we used are already in `configs/`, so the labels do not need to be rebuilt.
+
+Only scans that have a segmentation file are used, because the label comes from it; the model never reads the segmentation.
 
 ## Usage
 

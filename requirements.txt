@@ -9,4 +9,5 @@ scikit-learn==1.7.2
 scipy==1.15.3
 nibabel==5.4.2
 monai==1.5.2
+einops==0.8.2           # needed by MONAI's ViT (BrainIAC)
 optuna==4.8.0
