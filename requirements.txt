@@ -1,0 +1,12 @@
+# Python 3.10. Exact versions of the environment that produced the reported results.
+torch==2.5.1            # default PyPI wheel = CUDA 12.4
+transformers==4.40.2
+tokenizers==0.19.1
+safetensors==0.7.0
+numpy==2.2.6
+pandas==2.3.3
+scikit-learn==1.7.2
+scipy==1.15.3
+nibabel==5.4.2
+monai==1.5.2
+optuna==4.8.0
